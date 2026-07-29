@@ -1,0 +1,99 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Gate Entry{% endblock title %}
+
+{% block main-content %}
+
+<style>
+body{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+}
+
+.gate-box{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:20px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 25px rgba(0,255,200,.25);
+  padding:40px;
+  max-width:420px;
+  margin:auto;
+  margin-top:80px;
+  text-align:center;
+}
+
+.gate-box h2{
+  color:#7fffe1;
+  text-shadow:0 0 12px rgba(127,255,225,.8);
+  margin-bottom:25px;
+}
+
+.gate-box input{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  font-size:18px;
+  text-align:center;
+  background:#021212;
+  color:#00ffbe;
+  border:1px solid rgba(0,255,200,.4);
+}
+
+.gate-box button{
+  width:100%;
+  margin-top:20px;
+  padding:14px;
+  border-radius:10px;
+  font-size:18px;
+  background:linear-gradient(180deg,#00ffd5,#00bfa5);
+  color:#021212;
+  font-weight:600;
+  border:none;
+}
+
+.success{
+  color:#00ff7f;
+  margin-top:25px;
+  font-size:18px;
+}
+
+.error{
+  color:#ff4d4d;
+  margin-top:25px;
+  font-size:18px;
+}
+</style>
+
+<div class="container">
+
+  <div class="gate-box">
+    <h2>🚗 SMART PARKING GATE</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <input
+        type="text"
+        name="token"
+        placeholder="Enter Booking Token (e.g. ABC123XYZ)"
+        required
+        autofocus
+        oninput="this.value = this.value.toUpperCase()"
+      >
+
+      <button type="submit">
+        VERIFY & OPEN GATE
+      </button>
+    </form>
+
+    {% if message %}
+      <div class="{{ status }}">
+        {{ message }}
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+{% endblock main-content %}

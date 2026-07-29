@@ -1,0 +1,117 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Register{% endblock title %}
+
+{% block main-content %}
+
+<style>
+body {
+    background: radial-gradient(circle at top, #0b3a3a, #021818);
+    color: #dffefe;
+}
+
+h3 {
+    color: #6fffe9;
+    text-align: center;
+    font-weight: 600;
+}
+
+form.shadow {
+    background: linear-gradient(145deg, #052b2b, #031818);
+    border: 1px solid #0aa6a6;
+    border-radius: 14px;
+    box-shadow: 0 0 25px rgba(0, 255, 200, 0.15);
+}
+
+form label {
+    color: #7fffd4;
+}
+
+form input {
+    background-color: #031e1e !important;
+    border: 1px solid #0aa6a6 !important;
+    color: #eaffff !important;
+    border-radius: 6px;
+}
+
+form input:focus {
+    border-color: #6fffe9 !important;
+    box-shadow: 0 0 8px rgba(111, 255, 233, 0.7);
+}
+
+form input[type="submit"] {
+    width: 100%;
+    background: linear-gradient(135deg, #00c9a7, #00b3b3);
+    border: none;
+    color: #022;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+form input[type="submit"]:hover {
+    box-shadow: 0 0 15px rgba(0, 255, 220, 0.8);
+}
+
+.alert {
+    background-color: #052b2b !important;
+    color: #aaffee !important;
+}
+
+.text-danger {
+    color: #ff6b6b !important;
+}
+</style>
+
+<div class="container">
+  <div class="row my-4">
+    <div class="col-sm-6 offset-sm-3">
+
+      <h3>🚗 Create Account</h3>
+      <hr>
+
+      <form method="post" novalidate class="shadow p-5">
+
+        {% csrf_token %}
+
+        <!-- MESSAGES -->
+        {% if messages %}
+          {% for message in messages %}
+            <p class="alert alert-{{message.tags}} text-center">
+              {{message}}
+            </p>
+          {% endfor %}
+        {% endif %}
+
+        <!-- FORM FIELDS -->
+        {% for fm in form %}
+        <div class="mb-3">
+          {{fm.label_tag}}
+          {{fm}}
+          <small class="text-danger">{{fm.errors|striptags}}</small>
+        </div>
+        {% endfor %}
+
+        <!-- NON FIELD ERRORS -->
+        {% if form.non_field_errors %}
+          {% for error in form.non_field_errors %}
+            <p class="alert alert-danger">{{error}}</p>
+          {% endfor %}
+        {% endif %}
+
+        <input type="submit" value="Register">
+
+        <div class="text-center mt-3">
+          <small>
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-danger fw-bold">Login</a>
+          </small>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock main-content %}

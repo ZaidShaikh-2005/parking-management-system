@@ -1,0 +1,133 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Checkout{% endblock title %}
+
+{% block main-content %}
+
+<style>
+body{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+}
+
+h4{
+  color:#7fffe1;
+  text-shadow:0 0 8px rgba(127,255,225,.5);
+}
+
+.card{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:16px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 20px rgba(0,255,200,.15);
+}
+
+p, small{
+  color:#c9fff3;
+}
+
+.total-amount{
+  font-size:18px;
+  color:#00ffbe;
+}
+</style>
+
+<div class="container">
+ <div class="row mt-5">
+
+  <!-- ORDER SUMMARY -->
+  <div class="col-sm-6">
+    <h4>Booking Summary</h4>
+    <hr>
+
+    {% for item in cart_items %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>{{item.product.title}}</h5>
+        <p>Duration: {{item.quantity}} Hr</p>
+        <p><strong>Price:</strong> ₹{{item.total_cost}}</p>
+      </div>
+    </div>
+    {% endfor %}
+
+    <p class="total-amount">
+      Total Cost + ₹70 = ₹{{totalamount}}
+    </p>
+  </div>
+
+  <!-- CUSTOMER + PAYMENT -->
+  <div class="col-sm-4 offset-sm-1">
+    <h4>Customer Details</h4>
+    <hr>
+
+    <form action="{% url 'paymentdone' %}" id="myform">
+
+      {% for ad in add %}
+      <div class="card mb-2">
+        <div class="card-body">
+          <h5>{{ad.f_name}} {{ad.m_name}} {{ad.l_name}}</h5>
+          <p>{{ad.email}}</p>
+        </div>
+      </div>
+
+      <input type="hidden" name="custid" value="{{ad.customer_id}}">
+      {% endfor %}
+
+      <!-- PAYPAL -->
+      <div class="text-end mb-3">
+        <div id="paypal-button-container"></div>
+      </div>
+
+      <hr>
+
+      <!-- WHATSAPP BOOKING -->
+      <div class="text-center mt-3">
+        <p class="fw-bold text-success mb-2">
+          Or book without payment
+        </p>
+
+        {% if booking_token %}
+        <a
+          href="https://wa.me/919820350850?text=Hello%20I%20want%20to%20book%20a%20parking%20slot.%0A%0AConfirm%20Booking:%0Ahttp://127.0.0.1:8000/admin-confirm-booking/?token={{ booking_token }}%26action=yes%0A%0AReject%20Booking:%0Ahttp://127.0.0.1:8000/admin-confirm-booking/?token={{ booking_token }}%26action=no"
+          target="_blank"
+          class="btn btn-success fw-bold px-4 py-2">
+          📲 Book via WhatsApp
+        </a>
+        {% endif %}
+
+        <p class="small text-muted mt-2">
+          Admin will confirm booking.
+        </p>
+      </div>
+
+    </form>
+  </div>
+
+ </div>
+</div>
+
+{% endblock main-content %}
+
+{% block payment-gateway %}
+
+<script src="https://www.paypal.com/sdk/js?client-id=AVfKiC5XfSIPKhtxQ0SHfjurSRmfWyXeH9N5NTvP19RwqGAOGNROQdQJ53Lle7pz3tT0vPVPsohZNDzV&currency=USD"></script>
+
+<script>
+paypal.Buttons({
+  createOrder: function(data, actions) {
+    return actions.order.create({
+      purchase_units: [{
+        amount: { value: '{{totalamount}}' }
+      }]
+    });
+  },
+
+  onApprove: function(data, actions) {
+    return actions.order.capture().then(function(orderData) {
+      document.getElementById("myform").submit();
+    });
+  }
+}).render('#paypal-button-container');
+</script>
+
+{% endblock payment-gateway %}

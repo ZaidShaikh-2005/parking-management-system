@@ -1,0 +1,66 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Book Slot{% endblock title %}
+
+{% block main-content %}
+
+<div class="container my-5">
+
+  <h1 class="text-center mb-4">🚗 Book Parking Slot</h1>
+
+  <div class="row justify-content-center">
+
+    <div class="col-md-6">
+
+      <div class="card p-4" style="
+          background: linear-gradient(180deg,#0e2a2a,#061818);
+          border:1px solid rgba(0,255,200,0.3);
+          box-shadow:0 0 25px rgba(0,255,200,0.2);
+          border-radius:16px;">
+
+        <!-- PARKING LOT DETAILS -->
+        <h3 class="text-center mb-3">{{ product.title }}</h3>
+
+        <img src="{{ product.product_image.url }}"
+             class="img-fluid mb-3 rounded"
+             alt="{{ product.title }}">
+
+        <p class="text-light">{{ product.description }}</p>
+
+        <!-- PRICE -->
+        <p><strong>Price:</strong> ₹{{ product.discounted_price }}</p>
+
+        <!-- TOTAL -->
+        <div class="mt-3">
+          <h4>Total Amount</h4>
+          <p>Slot Price: ₹{{ product.discounted_price }}</p>
+          <p>Service Charge: ₹70</p>
+          <p>
+            <strong style="color:#00ffbe;">
+              Total: ₹{{ total_amount }}
+            </strong>
+          </p>
+        </div>
+
+        <!-- BOOK BUTTON -->
+        <form method="POST" action="{% url 'checkout' %}">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ product.id }}">
+
+          <div class="d-grid mt-3">
+            <button type="submit" class="btn btn-primary">
+              Confirm Booking
+            </button>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock main-content %}

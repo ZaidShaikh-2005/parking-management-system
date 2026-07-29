@@ -1,0 +1,125 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}My Bookings{% endblock title %}
+
+{% block main-content %}
+
+<style>
+body{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+}
+
+h3{
+  color:#7fffe1;
+  text-shadow:0 0 10px rgba(127,255,225,.6);
+}
+
+.border-end{
+  border-color: rgba(0,255,200,.25)!important;
+}
+
+.list-unstyled .btn{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border:1px solid rgba(0,255,200,.3);
+  color:#7fffe1;
+}
+
+.shadow-sm{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:16px;
+  border:1px solid rgba(0,255,200,.25);
+  padding:15px;
+}
+
+.progress{
+  height:8px;
+  background:#042020;
+}
+
+.progress-bar{
+  background: linear-gradient(90deg,#00ffbe,#00cfa0);
+}
+</style>
+
+<div class="container my-5">
+ <div class="row">
+
+  <h3>
+    Welcome <span class="text-capitalize">{{request.user}}</span>
+  </h3>
+
+  <!-- SIDE MENU -->
+  <div class="col-sm-2 border-end">
+   <ul class="list-unstyled">
+    <li class="d-grid">
+      <a href="{% url 'orders' %}" class="btn">
+        My Bookings
+      </a>
+    </li>
+   </ul>
+  </div>
+
+  <!-- BOOKINGS -->
+  <div class="col-sm-9 offset-sm-1">
+
+    {% if order_placed %}
+
+    {% for op in order_placed %}
+    <div class="row shadow-sm mb-3 align-items-center">
+
+      <!-- IMAGE -->
+      <div class="col-sm-3 text-center">
+        {% if op.product.product_image %}
+          <img src="{{op.product.product_image.url}}" class="img-fluid" height="120">
+        {% else %}
+          <img src="{% static 'app/images/default_parking.jpg' %}" class="img-fluid" height="120">
+        {% endif %}
+      </div>
+
+      <!-- DETAILS -->
+      <div class="col-sm-5">
+        <p><strong>Parking Area:</strong> {{op.product.title}}</p>
+        <p><strong>Duration:</strong> {{op.quantity}} Hr</p>
+        <p><strong>Price:</strong> ₹{{op.total_cost}}</p>
+      </div>
+
+      <!-- STATUS -->
+      <div class="col-sm-4">
+        <p><strong>Status:</strong> {{op.status}}</p>
+
+        {% if op.status == 'Accepted' %}
+        <div class="progress">
+            <div class="progress-bar" style="width: 25%;"></div>
+        </div>
+        {% endif %}
+
+        {% if op.status == 'Packed' %}
+        <div class="progress">
+            <div class="progress-bar bg-info" style="width: 60%;"></div>
+        </div>
+        {% endif %}
+
+        {% if op.status == 'Delivered' %}
+        <div class="progress">
+            <div class="progress-bar bg-success" style="width: 100%;"></div>
+        </div>
+        {% endif %}
+
+      </div>
+
+    </div>
+    {% endfor %}
+
+    {% else %}
+    <p class="text-center text-warning mt-4">
+      🚫 No bookings yet
+    </p>
+    {% endif %}
+
+  </div>
+
+ </div>
+</div>
+
+{% endblock main-content %}

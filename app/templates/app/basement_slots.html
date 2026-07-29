@@ -1,0 +1,101 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Basement Parking{% endblock title %}
+
+{% block main-content %}
+
+<div class="container my-5">
+
+  <!-- NAVBAR -->
+  <div class="row">
+    <nav class="col-12 navbar navbar-expand-lg navbar-dark"
+         style="background: linear-gradient(135deg,#0f3d3e,#062b2c); border-radius:12px;">
+
+      <a class="navbar-brand" href="#">
+        <h2 style="
+          font-family: Verdana, sans-serif;
+          color: #7fffe1;
+          text-transform: uppercase;
+          border-bottom: 3px solid #00ffd5;
+          display: inline-block;
+          padding: 5px;">
+          🚗 Basement Parking
+        </h2>
+      </a>
+
+      <button class="navbar-toggler bg-light" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-3">
+
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'basement' %}">All</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'basementdata' 'below' %}">
+              Below ₹800
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'basementdata' 'above' %}">
+              Above ₹800
+            </a>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <!-- GRID -->
+  <div class="row d-flex justify-content-start mt-4">
+
+    {% for product in lots %}
+    <div class="col-sm-3 text-center mb-4">
+
+      <a href="{% url 'product-detail' product.id %}" class="btn p-0">
+
+        <div class="item p-3" style="
+          background: linear-gradient(180deg,#0e2a2a,#061818);
+          border-radius:16px;
+          border:1px solid rgba(0,255,200,.3);
+          transition:.3s;">
+
+          {% if product.product_image %}
+          <img src="{{ product.product_image.url }}" height="250" class="img-fluid rounded">
+          {% else %}
+          <img src="{% static 'app/images/default_parking.jpg' %}" height="250" class="img-fluid rounded">
+          {% endif %}
+
+          <div class="fw-bold mt-2 text-light">{{ product.title }}</div>
+
+          <div class="fw-bold text-info">
+            ₹ {{ product.discounted_price }}
+            <small class="fw-light text-decoration-line-through text-danger">
+              {{ product.selling_price }}
+            </small>
+          </div>
+
+        </div>
+
+      </a>
+
+    </div>
+    {% endfor %}
+
+  </div>
+
+  {% if not lots %}
+  <p class="text-center text-warning mt-4">
+    🚫 No basement parking slots available
+  </p>
+  {% endif %}
+
+</div>
+
+{% endblock main-content %}

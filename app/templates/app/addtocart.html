@@ -1,0 +1,176 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Cart{% endblock title %}
+
+{% block main-content %}
+<style>
+.card {
+  background: linear-gradient(180deg, #0e2a2a, #061818) !important;
+  color: #e6fffa !important;
+  border-radius: 16px;
+  border: 1px solid rgba(0,255,200,0.2);
+  box-shadow: 0 0 25px rgba(0,255,200,0.15);
+}
+
+/* FORCE TEXT COLORS */
+.card h3,
+.card h5,
+.card p,
+.card span,
+.card li {
+  color: #e6fffa !important;
+}
+
+/* LIST GROUP FIX */
+.list-group-item {
+  background: transparent !important;
+  color: #e6fffa !important;
+  border-color: rgba(0,255,200,0.2);
+}
+
+/* BUTTON FIX */
+.btn-danger {
+  background: #ff4d4d !important;
+  border: none;
+}
+
+/* IMAGE BORDER */
+.img-thumbnail {
+  background: transparent !important;
+  border: 1px solid rgba(0,255,190,0.3);
+}
+</style>
+
+<div class="container my-5">
+ <div class="row">
+  <h1 class="text-center mb-5">Bookings</h1>
+
+  <div class="col-sm-8">
+   <div class="card">
+    <div class="card-body">
+     <h3>Parking Slots</h3>
+
+     {% for cart in carts %}
+     <hr>
+
+     <div class="row">
+      <div class="col-sm-3 text-center align-self-center">
+        <img src="{{cart.product.product_image.url}}"
+             class="img-fluid img-thumbnail"
+             height="150" width="150">
+      </div>
+
+      <div class="col-sm-9">
+       <h5>{{cart.product.title}}</h5>
+
+       <div class="my-3">
+        <label>Hours:</label>
+
+        <button type="button" class="minus-cart btn" data-pid="{{cart.product.id}}">
+          ➖
+        </button>
+
+        <span class="quantity">{{cart.quantity}}</span>
+
+        <button type="button" class="plus-cart btn" data-pid="{{cart.product.id}}">
+          ➕
+        </button>
+       </div>
+
+       <div class="d-flex justify-content-between">
+        <button type="button"
+                class="btn btn-danger remove-cart"
+                data-pid="{{cart.product.id}}">
+          Remove Slot
+        </button>
+
+        <p><strong>Rs. {{cart.product.discounted_price}}</strong></p>
+       </div>
+      </div>
+     </div>
+     {% endfor %}
+
+    </div>
+   </div>
+  </div>
+
+  <div class="col-sm-4">
+   <div class="card">
+    <div class="card-body">
+     <h3>The Total Amount</h3>
+
+     <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between">
+        Amount
+        <span>Rs. <span id="amount">{{amount}}</span></span>
+      </li>
+
+      <li class="list-group-item d-flex justify-content-between">
+        Tax <span>Rs. 70</span>
+      </li>
+
+      <li class="list-group-item d-flex justify-content-between">
+        <strong>Total</strong>
+        <span><strong>Rs. <span id="totalamount">{{totalamount}}</span></strong></span>
+      </li>
+     </ul>
+
+     <div class="d-grid mt-3">
+       <a href="{% url 'checkout' %}" class="btn btn-success">
+         Book Slot
+       </a>
+     </div>
+
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<script>
+$(document).ready(function(){
+
+    // PLUS
+    $(document).on('click', '.plus-cart', function(){
+        var id = $(this).data("pid");
+        var eml = this;
+
+        $.get("/pluscart/", { prod_id: id }, function(data){
+            $(eml).siblings(".quantity").text(data.quantity);
+            $("#amount").text(data.amount);
+            $("#totalamount").text(data.totalamount);
+        });
+    });
+
+    // MINUS
+    $(document).on('click', '.minus-cart', function(){
+        var id = $(this).data("pid");
+        var eml = this;
+
+        $.get("/minuscart/", { prod_id: id }, function(data){
+            if(data.quantity === 0){
+                $(eml).closest(".row").remove();
+            } else {
+                $(eml).siblings(".quantity").text(data.quantity);
+            }
+            $("#amount").text(data.amount);
+            $("#totalamount").text(data.totalamount);
+        });
+    });
+
+    // REMOVE
+    $(document).on('click', '.remove-cart', function(){
+        var id = $(this).data("pid");
+        var eml = this;
+
+        $.get("/removecart/", { prod_id: id }, function(data){
+            $(eml).closest(".row").remove();
+            $("#amount").text(data.amount);
+            $("#totalamount").text(data.totalamount);
+        });
+    });
+
+});
+</script>
+
+{% endblock %}

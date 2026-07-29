@@ -1,0 +1,47 @@
+{% extends 'app/base.html' %}
+
+{% block main-content %}
+<div class="container my-5 text-center">
+
+  <h2 class="mb-4">Confirm Parking Slot Booking</h2>
+
+  <div class="card mx-auto" style="max-width: 400px;">
+    <div class="card-body">
+
+      <p class="fw-bold">
+        Parking Area: {{ slot.parking_lot.title }}
+      </p>
+
+      <p>
+        Slot Number: <strong>{{ slot.slot_number }}</strong>
+      </p>
+
+      {% if slot.is_occupied %}
+        <p class="text-danger fw-bold">
+          ❌ This slot is already occupied
+        </p>
+      {% else %}
+        <form method="post">
+          {% csrf_token %}
+
+          <button type="submit"
+                  name="action"
+                  value="yes"
+                  class="btn btn-success px-4 me-3">
+            ✅ YES – Confirm
+          </button>
+
+          <button type="submit"
+                  name="action"
+                  value="no"
+                  class="btn btn-danger px-4">
+            ❌ NO – Reject
+          </button>
+        </form>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

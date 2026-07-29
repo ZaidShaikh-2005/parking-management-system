@@ -1,0 +1,107 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block main-content %}
+
+<style>
+.item {
+  background: #16292b;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.item img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+/* ZOOM */
+.item:hover img {
+  transform: scale(1.15);
+}
+
+/* LIFT */
+.item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 20px rgba(47,227,194,0.6);
+}
+
+.item a {
+  display: block;
+  color: white;
+  text-decoration: none;
+}
+</style>
+
+<div class="container my-5">
+
+  <h2 class="text-center text-white">🚗 ALL PARKING AREAS 🚗</h2>
+
+  <p style="color:white;">COUNT: {{ all_slots|length }}</p>
+
+  <div class="owl-carousel owl-theme">
+
+    {% for p in all_slots %}
+    <div class="item">
+
+      <a href="{% url 'product-detail' p.id %}">
+
+        <!-- IMAGE -->
+        {% if p.product_image %}
+            <img src="{{ p.product_image.url }}">
+        {% else %}
+            <img src="{% static 'images/default.png' %}">
+        {% endif %}
+
+        <!-- TITLE -->
+        <div class="text-center mt-2" style="color:#eafffa; font-weight:bold;">
+          {{ p.title }}
+        </div>
+
+        <!-- PRICE (🔥 ADDED) -->
+        <div class="text-center mb-2">
+          <span style="color:#00ffd5; font-weight:bold;">
+            ₹ {{ p.discounted_price }}
+          </span>
+
+          <span style="
+            text-decoration: line-through;
+            color:#ff6b6b;
+            margin-left:6px;
+            font-size:14px;">
+            ₹ {{ p.selling_price }}
+          </span>
+        </div>
+
+      </a>
+
+    </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+<script>
+window.onload = function () {
+    if (typeof $ !== "undefined") {
+        $('.owl-carousel').owlCarousel({
+            loop:true,
+            margin:20,
+            nav:true,
+            autoplay:true,
+            autoplayTimeout:3000,
+            responsive:{
+              0:{items:1},
+              600:{items:2},
+              1000:{items:3}
+            }
+        });
+    }
+};
+</script>
+
+{% endblock %}

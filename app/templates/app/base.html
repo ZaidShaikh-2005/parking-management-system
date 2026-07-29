@@ -1,0 +1,196 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Owl Carousel CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+  <title>Smart Parking | {% block title %}{% endblock title %}</title>
+
+  <style>
+    body {
+      background: linear-gradient(180deg, #0f1c1e, #081214);
+      color: #eafdfc;
+    }
+
+    .navbar {
+      background: linear-gradient(135deg, #0f3d3e, #062b2c);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.7);
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: #2fe3c2 !important;
+      font-weight: 600;
+    }
+
+    .nav-link:hover {
+      color: #ffffff !important;
+    }
+
+    footer {
+      background: linear-gradient(135deg, #062b2c, #0f3d3e);
+      color: #eafdfc;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+
+    <a class="navbar-brand fw-bold fst-italic" href="/">ParkWise</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <!-- LEFT MENU -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        <!-- Parking -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            Parking
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'basement' %}">Basement</a></li>
+            <li><a class="dropdown-item" href="{% url 'open_parking' %}">Open Parking</a></li>
+          </ul>
+        </li>
+
+        <!-- Gate -->
+        <li class="nav-item dropdown ms-2">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            Gate
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'gate_entry' %}">Gate Entry</a></li>
+          </ul>
+        </li>
+
+      </ul>
+
+      <!-- SEARCH -->
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search">
+        <button class="btn btn-warning">🔍</button>
+      </form>
+
+      <!-- RIGHT SIDE -->
+      <ul class="navbar-nav ms-3">
+
+        {% if request.user.is_authenticated %}
+
+        <li class="nav-item dropdown mx-2">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            {{request.user.username}}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'orders' %}">Bookings</a></li>
+            <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Change Password</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item mx-2">
+          <a href="{% url 'showcart' %}" class="nav-link">🚗 {{totalitem}}</a>
+        </li>
+
+        {% else %}
+        <li class="nav-item mx-2"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+        <li class="nav-item mx-2"><a href="{% url 'customerregistration' %}" class="nav-link">Register</a></li>
+        {% endif %}
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+{% block main-content %}{% endblock %}
+
+<!-- FOOTER -->
+<footer class="container-fluid text-center p-4 mt-5">
+  <p>Smart Parking System © 2025</p>
+</footer>
+
+<!-- JS (IMPORTANT ORDER) -->
+<!-- jQuery (ONLY ONE, FIRST LOAD) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Owl Carousel JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+<!-- Bootstrap (LAST) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+$(document).ready(function(){
+
+    console.log("JS LOADED ✅");
+
+    // PLUS
+    $(document).on('click', '.plus-cart', function(){
+        console.log("PLUS CLICKED");
+
+        var id = $(this).data("pid");
+        var eml = this;
+
+        $.get("/pluscart/", { prod_id: id }, function(data){
+            $(eml).siblings(".quantity").text(data.quantity);
+            $("#amount").text(data.amount);
+            $("#totalamount").text(data.totalamount);
+        });
+    });
+
+    // MINUS
+    $(document).on('click', '.minus-cart', function(){
+        console.log("MINUS CLICKED");
+
+        var id = $(this).data("pid");
+        var eml = this;
+
+        $.get("/minuscart/", { prod_id: id }, function(data){
+            if(data.quantity === 0){
+                $(eml).closest(".row").remove();
+            } else {
+                $(eml).siblings(".quantity").text(data.quantity);
+            }
+            $("#amount").text(data.amount);
+            $("#totalamount").text(data.totalamount);
+        });
+    });
+
+    // REMOVE
+    $(document).on('click', '.remove-cart', function(){
+        console.log("REMOVE CLICKED");
+
+        var id = $(this).data("pid");
+        var eml = this;
+
+        $.get("/removecart/", { prod_id: id }, function(data){
+            $(eml).closest(".row").remove();
+            $("#amount").text(data.amount);
+            $("#totalamount").text(data.totalamount);
+        });
+    });
+
+});
+</script>
+
+</body>
+</html>

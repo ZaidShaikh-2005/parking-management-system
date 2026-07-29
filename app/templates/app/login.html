@@ -1,0 +1,122 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Login{% endblock title %}
+
+{% block main-content %}
+
+<style>
+body{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+}
+
+h3{
+  color:#7fffe1;
+  text-shadow:0 0 10px rgba(127,255,225,.6);
+  text-align:center;
+}
+
+form.shadow{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:18px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 30px rgba(0,255,200,.2);
+}
+
+label{
+  color:#cffff3;
+}
+
+input{
+  background:#042020!important;
+  border:1px solid rgba(0,255,200,.35)!important;
+  color:#e6fffa!important;
+}
+
+input:focus{
+  box-shadow:0 0 12px rgba(0,255,200,.6)!important;
+}
+
+.btn-primary{
+  background: linear-gradient(90deg,#00ffbe,#00cfa0);
+  border:none;
+  color:#003333;
+  font-weight:bold;
+}
+
+.btn-primary:hover{
+  box-shadow:0 0 25px rgba(0,255,190,.9);
+}
+
+a{
+  color:#7fffe1;
+}
+
+a:hover{
+  color:#00ffbe;
+}
+
+.alert-danger{
+  background:#3b0f0f;
+  border:1px solid #ff6b6b;
+  color:#ffb3b3;
+}
+</style>
+
+<div class="container">
+ <div class="row my-5">
+  <div class="col-sm-6 offset-sm-3">
+
+   <h3>🔐 Login to ParkWise</h3>
+   <hr style="border-color:rgba(0,255,200,.3)">
+
+   <form method="post" novalidate class="shadow p-5">
+    {% csrf_token %}
+
+    <!-- MESSAGES -->
+    {% if messages %}
+      {% for message in messages %}
+        <p class="alert alert-{{message.tags}} text-center">
+          {{message}}
+        </p>
+      {% endfor %}
+    {% endif %}
+
+    <!-- FORM FIELDS -->
+    {% for fm in form %}
+    <div class="mb-3">
+      {{fm.label_tag}}
+      {{fm}}
+      <small class="text-danger">{{fm.errors|striptags}}</small>
+    </div>
+    {% endfor %}
+
+    <!-- NON FIELD ERRORS -->
+    {% if form.non_field_errors %}
+      {% for error in form.non_field_errors %}
+        <p class="alert alert-danger">{{error}}</p>
+      {% endfor %}
+    {% endif %}
+
+    <small>
+      <a href="{% url 'password_reset' %}">Forgot Password?</a>
+    </small>
+
+    <input type="submit" class="btn btn-primary mt-4 w-100" value="Login">
+
+    <div class="text-center mt-3">
+      <small>
+        New to ParkWise?
+        <a href="{% url 'customerregistration' %}" class="text-danger fw-bold">
+          Create Account
+        </a>
+      </small>
+    </div>
+
+   </form>
+
+  </div>
+ </div>
+</div>
+
+{% endblock main-content %}

@@ -1,0 +1,137 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock title %}
+
+{% block main-content %}
+
+<style>
+/* ===== PAGE BACKGROUND ===== */
+body{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+}
+
+/* ===== HEADINGS ===== */
+h3{
+  color:#7fffe1;
+  text-shadow:0 0 8px rgba(127,255,225,.6);
+}
+
+/* ===== SIDE MENU ===== */
+.border-end{
+  border-color: rgba(0,255,200,.25)!important;
+}
+
+.list-unstyled .btn{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border:1px solid rgba(0,255,200,.3);
+  color:#7fffe1;
+  margin-bottom:10px;
+  transition:.3s;
+}
+
+.list-unstyled .btn:hover{
+  box-shadow:0 0 15px rgba(0,255,190,.7);
+  transform: translateY(-2px);
+}
+
+/* ===== FORM ===== */
+form{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  padding:25px;
+  border-radius:16px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 25px rgba(0,255,200,.15);
+}
+
+label{
+  color:#7fffe1;
+}
+
+input, select, textarea{
+  background:#050d0d!important;
+  border:1px solid rgba(0,255,200,.35)!important;
+  color:#e6fffa!important;
+}
+
+input:focus, select:focus, textarea:focus{
+  box-shadow:0 0 12px rgba(0,255,190,.8)!important;
+  border-color:#00ffbe!important;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.btn-primary{
+  background: linear-gradient(135deg,#00ffbe,#00c9a7);
+  border:none;
+  color:#002b2b;
+  font-weight:bold;
+}
+
+.btn-primary:hover{
+  box-shadow:0 0 18px rgba(0,255,190,.9);
+}
+
+/* ===== ALERTS ===== */
+.alert{
+  background:#061818;
+  border:1px solid rgba(0,255,200,.35);
+  color:#7fffe1;
+}
+</style>
+
+<div class="container my-5">
+ <div class="row">
+
+  <h3>
+    Welcome <span class="text-capitalize">{{request.user}}</span>
+  </h3>
+
+  <!-- SIDE MENU -->
+  <div class="col-sm-2 border-end">
+    <ul class="list-unstyled">
+      <li class="d-grid">
+        <a href="{% url 'profile' %}" class="btn {{active}}">
+          Profile
+        </a>
+      </li>
+      <li class="d-grid">
+        <a href="{% url 'address' %}" class="btn">
+          Address
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PROFILE FORM -->
+  <div class="col-sm-8 offset-sm-1">
+    <form action="" method="post" novalidate>
+      {% csrf_token %}
+
+      {% for fm in form %}
+      <div class="form-group mb-3">
+        {{fm.label_tag}}
+        {{fm}}
+        <small class="text-danger">{{fm.errors|striptags}}</small>
+      </div>
+      {% endfor %}
+
+      <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary mb-3">
+          Submit
+        </button>
+      </div>
+    </form>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p {% if message.tags %}class="alert alert-{{message.tags}} mb-3"{% endif %}>
+          {{message}}
+        </p>
+      {% endfor %}
+    {% endif %}
+
+  </div>
+ </div>
+</div>
+
+{% endblock main-content %}

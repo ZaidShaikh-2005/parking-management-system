@@ -1,0 +1,109 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Customer Details{% endblock title %}
+
+{% block main-content %}
+
+<style>
+body{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+}
+
+h3{
+  color:#7fffe1;
+  text-shadow:0 0 8px rgba(127,255,225,.6);
+}
+
+.border-end{
+  border-color: rgba(0,255,200,.25)!important;
+}
+
+.list-unstyled .btn{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border:1px solid rgba(0,255,200,.3);
+  color:#7fffe1;
+  margin-bottom:10px;
+  transition:.3s;
+}
+
+.list-unstyled .btn:hover{
+  box-shadow:0 0 15px rgba(0,255,190,.7);
+  transform: translateY(-2px);
+}
+
+.card{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:16px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 25px rgba(0,255,200,.15);
+  transition:.35s;
+}
+
+.card:hover{
+  transform: translateY(-6px);
+  box-shadow:0 0 30px rgba(0,255,200,.5);
+}
+
+.card-body p{
+  color:#cffff3;
+}
+
+.card-body h3{
+  color:#00ffbe;
+  text-shadow:0 0 10px rgba(0,255,190,.8);
+}
+</style>
+
+<div class="container my-5">
+ <div class="row">
+
+  <h3>
+    Welcome <span class="text-capitalize">{{request.user}}</span>
+  </h3>
+
+  <!-- SIDE MENU -->
+  <div class="col-sm-2 border-end">
+    <ul class="list-unstyled">
+      <li class="d-grid">
+        <a href="{% url 'profile' %}" class="btn">
+          Profile
+        </a>
+      </li>
+      <li class="d-grid">
+        <a href="{% url 'address' %}" class="btn {{active}}">
+          Customer Info
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- CUSTOMER DATA -->
+  <div class="col-sm-9 offset-sm-1">
+   <div class="row g-4">
+
+    {% for ad in add %}
+    <div class="col-sm-6">
+     <div class="card">
+      <div class="card-body">
+
+       <h3>Customer {{forloop.counter}}</h3>
+
+       <p><strong>Full Name:</strong> 
+          {{ad.f_name}} {{ad.m_name}} {{ad.l_name}}
+       </p>
+
+       <p><strong>Email:</strong> {{ad.email}}</p>
+
+      </div>
+     </div>
+    </div>
+    {% endfor %}
+
+   </div>
+  </div>
+
+ </div>
+</div>
+
+{% endblock main-content %}

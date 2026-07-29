@@ -1,0 +1,134 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Open Parking{% endblock title %}
+
+{% block main-content %}
+
+<style>
+body {
+  background: radial-gradient(circle at top, #0f2f2f, #071818);
+}
+
+.open-nav {
+  background: linear-gradient(135deg, #0a2f2f, #0f3f3f);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,255,200,0.25);
+}
+
+.open-nav h2 {
+  color: #66ffe0 !important;
+  text-shadow: 0 0 10px rgba(0,255,200,0.6);
+  border-bottom: 3px solid #00ffd5 !important;
+}
+
+.item {
+  background: linear-gradient(180deg, #0f2f2f, #071818);
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(0,255,200,0.25);
+  transition: 0.35s;
+}
+
+.item img {
+  border-radius: 14px;
+  transition: 0.35s;
+}
+
+.item:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 0 30px rgba(0,255,200,0.8);
+}
+
+.item:hover img {
+  transform: scale(1.08);
+}
+
+.item .fw-bold {
+  color: #eafffa;
+}
+
+.item small {
+  color: #ff9c9c !important;
+}
+</style>
+
+<div class="container my-5">
+
+  <!-- NAVBAR -->
+  <div class="row mb-4">
+    <nav class="col-12 navbar navbar-expand-lg open-nav">
+
+      <a class="navbar-brand">
+        <h2 class="m-0">🚗 OPEN PARKING 🚗</h2>
+      </a>
+
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-3">
+
+          <li class="nav-item">
+            <a class="nav-link text-info fw-bold" href="{% url 'open_parking' %}">
+              All Slots
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link text-info fw-bold" href="{% url 'open_parking_data' 'below' %}">
+              Below ₹800
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link text-info fw-bold" href="{% url 'open_parking_data' 'above' %}">
+              Above ₹800
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+    </nav>
+  </div>
+
+  <!-- GRID -->
+  <div class="row d-flex justify-content-start">
+
+    {% for product in lots %}
+    <div class="col-sm-3 text-center mb-4">
+
+      <a href="{% url 'product-detail' product.id %}" class="btn p-0">
+
+        <div class="item">
+
+          {% if product.product_image %}
+            <img src="{{ product.product_image.url }}" height="300" class="img-fluid">
+          {% else %}
+            <img src="{% static 'app/images/default_parking.jpg' %}" height="300" class="img-fluid">
+          {% endif %}
+
+          <div class="fw-bold mt-2">{{ product.title }}</div>
+
+          <div class="fw-bold">
+            ₹ {{ product.discounted_price }}
+            <small class="fw-light text-decoration-line-through">
+              {{ product.selling_price }}
+            </small>
+          </div>
+
+        </div>
+
+      </a>
+
+    </div>
+    {% endfor %}
+
+  </div>
+
+  {% if not lots %}
+  <p class="text-center text-warning mt-4">
+    🚫 No open parking slots available
+  </p>
+  {% endif %}
+
+</div>
+
+{% endblock main-content %}

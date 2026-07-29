@@ -1,0 +1,208 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Parking Slots{% endblock title %}
+
+{% block main-content %}
+
+<style>
+/* ===== PAGE BACKGROUND ===== */
+body {
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+}
+
+/* ===== TITLE ===== */
+.parking-title {
+  text-align: center;
+  font-size: 36px;
+  letter-spacing: 3px;
+  color: #7fffe1;
+  margin-bottom: 40px;
+  text-shadow: 0 0 15px rgba(127,255,225,0.7);
+}
+
+/* ===== STATS ===== */
+.stats-card {
+  background: linear-gradient(180deg, #0e2a2a, #061818);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,255,200,0.25);
+}
+
+.stats-title {
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: #9fffe8;
+}
+
+.stats-value {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.total { color: #7fffe1; }
+.free  { color: #00ffbe; }
+.used  { color: #ff6b6b; }
+
+/* ===== SLOT CARD ===== */
+.slot-card {
+  height: 220px;
+  background: linear-gradient(180deg, #0e2a2a, #061818);
+  border-radius: 20px;
+  padding: 16px;
+  transition: all 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.slot-free {
+  border: 1px solid rgba(0,255,190,0.4);
+}
+
+.slot-free:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow:
+    0 0 25px rgba(0,255,190,0.8),
+    0 0 45px rgba(0,255,190,0.4);
+}
+
+.slot-occupied {
+  border: 1px solid rgba(255,70,70,0.4);
+  opacity: 0.6;
+}
+
+.slot-img {
+  max-width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  transition: transform 0.35s ease;
+}
+
+.slot-free:hover .slot-img {
+  transform: scale(1.08);
+}
+
+.slot-number {
+  margin-top: 12px;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.slot-wrapper {
+  padding: 12px;
+}
+</style>
+
+<!-- 🔥 PRODUCT ID STORED SAFELY (NO JS ERROR) -->
+<div id="parking-page" data-product-id="{{ product.id }}">
+
+<div class="container my-5">
+
+  <div class="parking-title">PARKING SLOTS</div>
+
+  <!-- ===== LIVE COUNTERS ===== -->
+  <div class="row mb-5">
+    <div class="col-md-4">
+      <div class="stats-card">
+        <div class="stats-title">TOTAL SLOTS</div>
+        <div class="stats-value total">{{ total_slots }}</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="stats-card">
+        <div class="stats-title">AVAILABLE</div>
+        <div class="stats-value free" id="available-count">
+          {{ available_slots }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="stats-card">
+        <div class="stats-title">OCCUPIED</div>
+        <div class="stats-value used" id="occupied-count">
+          {{ occupied_slots }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLOT GRID ===== -->
+  <div class="row justify-content-center">
+    {% for slot in slots %}
+      <div class="col-6 col-md-4 col-lg-2 slot-wrapper">
+
+        {% if slot.is_occupied %}
+          <div class="slot-card slot-occupied text-center"
+               data-slot="{{ slot.slot_number }}">
+            <img src="{% static 'app/images/car_red.png' %}" class="slot-img">
+            <div class="slot-number text-danger">
+              SLOT {{ slot.slot_number }}
+            </div>
+          </div>
+        {% else %}
+          <a href="{% url 'add-to-cart' %}?prod_id={{ product.id }}&slot={{ slot.slot_number }}"
+             class="text-decoration-none">
+            <div class="slot-card slot-free text-center"
+                 data-slot="{{ slot.slot_number }}">
+              <img src="{% static 'app/images/car_green.png' %}" class="slot-img">
+              <div class="slot-number text-success">
+                SLOT {{ slot.slot_number }}
+              </div>
+            </div>
+          </a>
+        {% endif %}
+
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+</div>
+
+<!-- ================= AUTO UPDATE SCRIPT (NO REFRESH) ================= -->
+<script>
+const productId = document
+    .getElementById("parking-page")
+    .dataset.productId;
+
+setInterval(() => {
+    fetch(`/api/slots/${productId}/`)
+        .then(res => res.json())
+        .then(data => {
+            let free = 0, occupied = 0;
+
+            data.forEach(slot => {
+                const card = document.querySelector(
+                    `.slot-card[data-slot="${slot.slot}"]`
+                );
+                if (!card) return;
+
+                if (slot.occupied) {
+                    card.classList.remove("slot-free");
+                    card.classList.add("slot-occupied");
+                    card.querySelector("img").src =
+                        "{% static 'app/images/car_red.png' %}";
+                    occupied++;
+                } else {
+                    card.classList.remove("slot-occupied");
+                    card.classList.add("slot-free");
+                    card.querySelector("img").src =
+                        "{% static 'app/images/car_green.png' %}";
+                    free++;
+                }
+            });
+
+            document.getElementById("available-count").innerText = free;
+            document.getElementById("occupied-count").innerValue = occupied;
+            document.getElementById("occupied-count").innerText = occupied;
+        });
+}, 3000); // 🔁 every 3 seconds
+</script>
+
+{% endblock main-content %}
