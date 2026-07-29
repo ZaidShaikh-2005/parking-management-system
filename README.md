@@ -27,7 +27,7 @@ A modern Django-based web application for smart parking slot booking and managem
 ## 🛠️ Tech Stack
 
 | Technology | Used |
-|------------|------|
+|------------|:----:|
 | Python | ✅ |
 | Django | ✅ |
 | SQLite | ✅ |
@@ -38,41 +38,19 @@ A modern Django-based web application for smart parking slot booking and managem
 
 ---
 
-## 📸 Screenshots
+# 📸 Screenshots
 
-### 🏠 Home Page
+| 🏠 Home Page | 🔐 Login Page |
+|:------------:|:-------------:|
+| <img src="screenshots/1home-page.png" width="450"> | <img src="screenshots/2login-page.png" width="450"> |
 
-![Home Page](screenshots/1home-page.png)
+| 🚗 Parking Areas | ✅ Booking Confirmed |
+|:----------------:|:-------------------:|
+| <img src="screenshots/3parking-areas.png" width="450"> | <img src="screenshots/4booking-confirmed.png.png" width="450"> |
 
----
-
-### 🔐 Login Page
-
-![Login Page](screenshots/2login-page.png)
-
----
-
-### 🚗 Parking Areas
-
-![Parking Areas](screenshots/3parking-areas.png)
-
----
-
-### ✅ Booking Confirmed
-
-![Booking Confirmed](screenshots/4booking-confirmed.png.png)
-
----
-
-### 🚧 Smart Parking Gate
-
-![Smart Parking Gate](screenshots/5smart-parking-gate.png)
-
----
-
-### ⚙️ Admin Dashboard
-
-![Admin Dashboard](screenshots/6admin-dashboard.png)
+| 🚧 Smart Parking Gate | ⚙️ Admin Dashboard |
+|:---------------------:|:------------------:|
+| <img src="screenshots/5smart-parking-gate.png" width="450"> | <img src="screenshots/6admin-dashboard.png" width="450"> |
 
 ---
 
