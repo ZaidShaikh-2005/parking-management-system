@@ -23,20 +23,27 @@ A modern Django-based web application for smart parking slot booking and managem
 - ⚙️ Django Admin Dashboard
 
 ---
-
 ## 🛠️ Tech Stack
 
-| Technology | Used |
-|------------|:----:|
-| Python | ✅ |
-| Django | ✅ |
-| SQLite | ✅ |
-| HTML | ✅ |
-| CSS | ✅ |
-| JavaScript | ✅ |
-| Bootstrap | ✅ |
+| 🐍 Python | 🌐 Django | 🗄️ SQLite | 🌐 HTML5 | 🎨 CSS3 | ⚡ JavaScript | 🅱️ Bootstrap | 📡 MQTT | 📟 ESP32 | 📏 Ultrasonic |
+|:---------:|:---------:|:----------:|:--------:|:-------:|:-------------:|:-------------:|:-------:|:--------:|:-------------:|
+| ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+# 🚀 Core Features
 
----
+| Feature | Description |
+|---------|-------------|
+| 🔐 **User Authentication** | Secure registration, login, password reset, and profile management for users and administrators. |
+| 🚗 **Parking Area Management** | Browse available parking areas with pricing, images, and real-time availability. |
+| 🅿 **Smart Slot Booking** | Book parking slots online with booking confirmation and booking history. |
+| 📱 **WhatsApp Notifications** | Receive booking confirmations and important updates via WhatsApp. |
+| 📧 **Email Notifications** | Automatic email notifications for booking confirmations and account activities. |
+| 🎫 **Booking Token Generation** | Generates a unique booking token for every successful reservation. |
+| 🚧 **Smart Parking Gate** | ESP32-based gate verification integrated with MQTT communication and sensors. |
+| 📡 **MQTT Communication** | Real-time communication between the Django server and ESP32 hardware using the MQTT protocol. |
+| 📟 **ESP32 Integration** | Controls smart parking hardware and exchanges real-time parking status. |
+| 📏 **Ultrasonic Sensors** | Detects vehicle presence and updates parking slot occupancy automatically. |
+| 📊 **Admin Dashboard** | Manage users, parking areas, slots, bookings, and monitor system activity. |
+| 📈 **Real-Time Monitoring** | Displays current parking slot availability and booking status instantly. |
 
 # 📸 Screenshots
 
